@@ -1,0 +1,258 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usepackage[plain]{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+
+\usetikzlibrary{automata,positioning}
+
+%
+% Basic Document Settings
+%
+
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1}
+
+\pagestyle{fancy}
+\lhead{\hmwkAuthorName}
+%\chead{\hmwkClass\ (\hmwkClassInstructor\ \hmwkClassTime): \hmwkTitle}
+\rhead{\firstxmark}
+\lfoot{\lastxmark}
+\cfoot{\thepage}
+
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+\setlength\parindent{0pt}
+
+%
+% Create Problem Sections
+%
+
+\newcommand{\enterProblemHeader}[1]{
+    \nobreak\extramarks{}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+}
+
+\newcommand{\exitProblemHeader}[1]{
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \stepcounter{#1}
+    \nobreak\extramarks{Problem \arabic{#1}}{}\nobreak{}
+}
+
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\newcounter{homeworkProblemCounter}
+\setcounter{homeworkProblemCounter}{1}
+\nobreak\extramarks{Problem \arabic{homeworkProblemCounter}}{}\nobreak{}
+
+%
+% Homework Problem Environment
+%
+% This environment takes an optional argument. When given, it will adjust the
+% problem counter. This is useful for when the problems given for your
+% assignment aren't sequential. See the last 3 problems of this template for an
+% example.
+%
+\newenvironment{homeworkProblem}[1][-1]{
+    \ifnum#1>0
+        \setcounter{homeworkProblemCounter}{#1}
+    \fi
+    \section{Problem \arabic{homeworkProblemCounter}}
+    \setcounter{partCounter}{1}
+    \enterProblemHeader{homeworkProblemCounter}
+}{
+    \exitProblemHeader{homeworkProblemCounter}
+}
+
+%
+% Homework Details
+%   - Title
+%   - Due date
+%   - Class
+%   - Section/Time
+%   - Instructor
+%   - Author
+%
+
+\newcommand{\hmwkTitle}{Homework\ \#7}
+\newcommand{\hmwkDueDate}{May 2, 2019}
+\newcommand{\hmwkClass}{Programming Languages}
+\newcommand{\hmwkClassTime}{Section 101}
+\newcommand{\hmwkClassInstructor}{Erin Keith}
+\newcommand{\hmwkAuthorName}{\textbf{Michael DesRoches}}
+
+%
+% Title Page
+%
+
+\title{
+    \vspace{2in}
+    \textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
+    \normalsize\vspace{0.1in}\small{Due\ on\ \hmwkDueDate\ at 9:00am}\\
+    \vspace{0.1in}\large{\textit{\hmwkClassInstructor\ \hmwkClassTime}}
+    \vspace{3in}
+}
+
+\author{\hmwkAuthorName}
+\date{}
+
+\renewcommand{\part}[1]{\textbf{\large Part \Alph{partCounter}}\stepcounter{partCounter}\\}
+
+
+\begin{document}
+\maketitle
+\pagebreak
+
+\begin{homeworkProblem}
+\begin{lstlisting}
+(56pts) Consider an implementation of sets with Prolog lists. A set is an
+unordered collection of elements, without duplicates.
+
+  (a)(14pts) Write the rules for a predicate isSet(S), which succeeds if the
+  list S is a set. The following queriesshow examplesof using this predicate:
+    ?-isSet([1,2,5]).
+    Yes
+    ?-isSet([1,2,1,5]).
+    No
+
+  (b)(14pts) Write the rules for a predicate subset(A,S), which succeeds if
+  the set A is  a subset of the set S. The following query shows an example
+  of using this predicate:
+    ?-subset([2,5], [1,5,3,2]).
+    Yes
+
+  (c)(14pts) Write the rules for a predicate union(A,B,C), which succeeds if
+  the union of sets Aand Bis the set C. The following query shows an example of
+  using this predicate:
+  ?-union([2,5,4], [1,5,3,2], C).
+  C = [4,1,5,3,2]
+
+  (d)(14pts) Write the rules for a predicate intersection(A,B,C), which succeeds
+  if the intersection of sets A and B is the set C. The following query shows an
+  example of using this predicate:
+  ?-intersection([2,5,4], [1,5,3,2], C).
+  C = [2,5]
+\end{lstlisting}
+  \textbf{Solution}
+\begin{lstlisting}
+(a)
+isSet(L) :- duplicate(L, []),!.
+duplicate([],_) :- !.
+duplicate([Head|_],List) :- member(Head,List), !, fail.
+duplicate([Head|Tail],List) :- duplicate(Tail,[Head|List]).
+(b)
+subset([],_).
+subset([A|S],K) :- member(A,K), subset(S,K), !.
+(c)
+union([],B,B).
+union([X|A],B,[X|C]) :- not(member(X,B)), union(A,B,C).
+union([X|A],B,C) :- member(X,B), union(A,B,C).
+(d)
+intersection([],_,[]).
+intersection([X|A],B,[X|C]) :- member(X,B), intersection(A,B,C).
+intersection([_|A],B,C) :- intersection(A,B,C).
+\end{lstlisting}
+\end{homeworkProblem}
+\pagebreak
+
+\begin{homeworkProblem}
+\begin{lstlisting}
+(14pts) Write the rules for a predicate tally(E,L,N), which succeeds if N is the
+number of occurrences of element E in list L. The following query shows an
+example of using this predicate:
+
+?-tally(3, [1,2,3,1,2,3],N).
+N = 2
+\end{lstlisting}
+  \textbf{Solution}\\
+\begin{lstlisting}
+tally(_,[],0).
+tally(E,[E|L],N) :- tally(E,L,M), N is M+1.
+tally(E,[F|L],N) :- not(E=F), tally(E,L,N).
+\end{lstlisting}
+\end{homeworkProblem}
+\pagebreak
+
+\begin{homeworkProblem}
+\begin{lstlisting}
+(15pts) Define predicates and/2, or/2, nand/2, nor/2, xor/2, and equ/2 (for
+logical equivalence) which succeed or fail according to the result of their
+respective operations; e.g.and(A,B) will succeed, if and only if both A and B
+succeed. Note that A and B can be Prolog goals (not only the constants true
+and fail).
+
+?-and(true, true).
+true
+\end{lstlisting}
+  \textbf{Solution}
+\begin{lstlisting}
+and(A,B) :- call(A), call(B).
+
+or(A,_) :- A, !.
+or(_,B) :- B.
+
+nand(A,B) :- not(and(A,B)).
+nor(A,B) :- not(or(A,B)).
+equ(A,B) :- or(and(A,B), and(not(A),not(B))).
+xor(A,B) :- not(equ(A,B)).
+\end{lstlisting}
+\end{homeworkProblem}
+\pagebreak
+
+\begin{homeworkProblem}
+\begin{lstlisting}
+(15pts) Write the rules for a predicate gcd(X,Y,G), whichdeterminesthe greatest
+common divisor of two positive integer numbers. Use Euclid's algorithm:
+https://www.khanacademy.org/computing/computer-science/cryptography/
+modarithmetic/a/the-euclidean-algorithm?-gcd
+
+(36, 63, G).
+G = 9
+\end{lstlisting}
+  \textbf{Solution}\\
+\begin{lstlisting}
+gcd(0,X,X) :- X > 0, !.
+gcd(X,Y,G) :- X >= Y, X1 is X-Y, gcd(X1,Y,G).
+gcd(X,Y,G) :- X < Y, X1 is Y-X, gcd(X1,X,G).
+\end{lstlisting}
+
+\end{homeworkProblem}
+\pagebreak
+
+\begin{homeworkProblem}
+\begin{lstlisting}
+(Extra Credit -10 pts) Write the rules for a predicate flatten(A,B), which
+succeeds if A is a list (possibly containing sublists), and B is a list
+containing all elements in Aand its sublists, but all at the same level. The
+following query shows an example of using this predicate:
+
+?-flatten([1, [2, [3, 4]], 5], L).
+L = [1, 2, 3, 4, 5]
+
+\end{lstlisting}
+  \textbf{Solution}\\
+\begin{lstlisting}
+flatten(A,B) :- flatten(A,[],B).
+flatten(Var, T, [Var|T]) :- var(Var), !.
+flatten([],T,T) :- !.
+flatten([H|T],TailList,List) :- !, flatten(H,FlatTail,List), flatten(T,TailList,FlatTail).
+flatten(NonList,T,[NonList|T]).
+\end{lstlisting}
+\end{homeworkProblem}
+\pagebreak
+
+\end{document}

@@ -1,0 +1,77 @@
+;subst : letter -> letter -> list #1
+;given a string expression, with letter x and y in that string, replace y with x
+(define (subst x y list)
+  (cond ((null? list) '())
+        ((list? (car list))
+  (cons (subst x y (car list)) (subst x y (cdr list))))
+  ((eq? (car list) x)
+  (cons y (subst x y (cdr list))))
+(else
+  (cons (car list)(subst x y (cdr list))))))
+
+;all-different? string #2
+;takes string and returns false if duplicate is found
+(define (all-different? lst)
+  (cond ((null? lst) #t)
+        ((member (car lst) (cdr lst)) #f)
+        (else (all-different? (cdr lst)))))
+
+;#4
+;
+(define (flatten L)
+(cond
+    ((null? L) '())
+    ((not (pair? L)) (list L))
+(else (append (flatten (car L))
+  (flatten (cdr L))))))
+
+;(flatten '(1 (2 (3 4) )5 ))
+
+;
+; #3
+;T ->num
+;defines tree
+(define T
+   '(13
+       (5
+           (1 () ())
+           (8 ()
+               (9 () ())
+           )
+       )
+       (22
+           (17 () ())
+           (25 () ())
+       )
+   )
+)
+
+(define (left T) (cadr T))
+(define (right T) (caddr T))
+(define (val T) (car T))
+
+;n-nodes : T
+;counts the number of nodes in the T tree
+(define (n-nodes T)
+   (cond ((null? T) 0)
+       (else (+ 1 (n-nodes (left T)) (n-nodes (right T))))))
+
+;n-leaves : tree
+;counts the number of leaves in T tree
+(define (n-leaves T)
+   (cond ((null? T) 0)
+       ((and (null? (left T)) (null? (right T))) 1)
+       (else (+ (n-leaves (left T)) (n-leaves (right T))))))
+
+;
+;
+(define (height T)
+(cond ((null? T) 0)
+(else (+ 1 (max (height (left T)) (height (right T)))))))
+
+;
+;
+(define (postorder T)
+   (cond ((null? T) '())
+(else (append (postorder (left T)) (postorder (right T))
+   (list (val T))))))

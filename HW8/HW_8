@@ -1,0 +1,93 @@
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+import javax.swing.event.*;
+import java.io.*;
+
+public class ColorSampler extends JFrame
+{
+   JList colorSelect = new JList();
+   DrawColor colorField = new DrawColor();
+
+   JButton save = new JButton("Reset");
+   JButton reset = new JButton("Reset");
+   JButton rMinus = new JButton("-");
+   JButton gMinus = new JButton("-");
+   JButton bMinus = new JButton("-");
+   JButton rPlus = new JButton("+");
+   JButton gPlus = new JButton("+");
+   JButton bPlus = new JButton("+");
+   JLabel redLabel = new JLabel("Red:");
+   JLabel greenLabel = new JLabel("Green:");
+   JLabel blueLabel = new JLabel("Blue:");
+   JTextField rValue = new JTextField("255");
+   JTextField gValue = new JTextField("255");
+   JTextField bValue = new JTextField("255");
+
+   static ColorsRead[] ColorArray = new ColorsRead[11];
+   static String[] colors = new String[11];
+
+    public static void main(String[] args)
+    {
+      try
+      {
+         ReadFromFile();
+      }
+      catch(IOException e)
+      {
+         e.printStackTrace();
+      }
+
+      for(int i = 0; i < ColorArray[0].numOfColors; i++)
+      {
+         colors[i] = ColorArray[i].name;
+      }
+      new ColorSampler();
+   }
+
+   static void ReadFromFile() throws IOException
+   {
+      FileInputStream stream = new FileInputStream("colors.txt");
+      InputStreamReader reader = new InputStreamReader(stream);
+      StreamTokenizer tokens = new StreamTokenizer(reader);
+
+        String name;
+        int    r;
+        int    g;
+        int    b;
+        int i = 0;
+
+      while (tokens.nextToken() != tokens.TT_EOF)
+      {
+         ColorArray[i] = new ColorsRead();
+         ColorArray[i].name = tokens.sval;
+         ColorArray[i].numOfColors++;
+         tokens.nextToken();
+         ColorArray[i].rvalue = (int) tokens.nval;
+         tokens.nextToken();
+         ColorArray[i].gvalue = (int) tokens.nval;
+         tokens.nextToken();
+         ColorArray[i].bvalue = (int) tokens.nval;
+
+         i++;
+      }
+
+      stream.close();
+    }
+
+    public ColorSampler()
+    {
+      this.setSize(325,300);
+      this.setLocationRelativeTo(null);
+      this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      this.setTitle("Color Sampler");
+
+      JPanel thePanel = new JPanel();
+
+      thePanel.setLayout(new GridBagLayout());
+
+      GridBagConstraints gridConstraints = new GridBagConstraints();
+
+      gridConstraints.insets = new Insets(5,5,5,5);
+      gridConstraints.anchor = GridBagConstraints.NORTHWEST;
+      gridConstraints.fill = GridBagConstraints.BOTH;

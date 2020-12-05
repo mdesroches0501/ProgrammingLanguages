@@ -1,0 +1,298 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usepackage[plain]{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+
+\usetikzlibrary{automata,positioning}
+
+%
+% Basic Document Settings
+%
+
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1}
+
+\pagestyle{fancy}
+\lhead{\hmwkAuthorName}
+%\chead{\hmwkClass\ (\hmwkClassInstructor\ \hmwkClassTime): \hmwkTitle}
+\rhead{\firstxmark}
+\lfoot{\lastxmark}
+\cfoot{\thepage}
+
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+\setlength\parindent{0pt}
+
+%
+% Create Problem Sections
+%
+
+\newcommand{\enterProblemHeader}[1]{
+    \nobreak\extramarks{}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+}
+
+\newcommand{\exitProblemHeader}[1]{
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \stepcounter{#1}
+    \nobreak\extramarks{Problem \arabic{#1}}{}\nobreak{}
+}
+
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\newcounter{homeworkProblemCounter}
+\setcounter{homeworkProblemCounter}{1}
+\nobreak\extramarks{Problem \arabic{homeworkProblemCounter}}{}\nobreak{}
+
+%
+% Homework Problem Environment
+%
+% This environment takes an optional argument. When given, it will adjust the
+% problem counter. This is useful for when the problems given for your
+% assignment aren't sequential. See the last 3 problems of this template for an
+% example.
+%
+\newenvironment{homeworkProblem}[1][-1]{
+    \ifnum#1>0
+        \setcounter{homeworkProblemCounter}{#1}
+    \fi
+    \section{Problem \arabic{homeworkProblemCounter}}
+    \setcounter{partCounter}{1}
+    \enterProblemHeader{homeworkProblemCounter}
+}{
+    \exitProblemHeader{homeworkProblemCounter}
+}
+
+%
+% Homework Details
+%   - Title
+%   - Due date
+%   - Class
+%   - Section/Time
+%   - Instructor
+%   - Author
+%
+
+\newcommand{\hmwkTitle}{Homework\ \#5}
+\newcommand{\hmwkDueDate}{April 11, 2019}
+\newcommand{\hmwkClass}{Programming Languages}
+\newcommand{\hmwkClassTime}{Section 101}
+\newcommand{\hmwkClassInstructor}{Erin Keith}
+\newcommand{\hmwkAuthorName}{\textbf{Michael DesRoches}}
+
+%
+% Title Page
+%
+
+\title{
+    \vspace{2in}
+    \textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
+    \normalsize\vspace{0.1in}\small{Due\ on\ \hmwkDueDate\ at 9:00am}\\
+    \vspace{0.1in}\large{\textit{\hmwkClassInstructor\ \hmwkClassTime}}
+    \vspace{3in}
+}
+
+\author{\hmwkAuthorName}
+\date{}
+
+\renewcommand{\part}[1]{\textbf{\large Part \Alph{partCounter}}\stepcounter{partCounter}\\}
+
+
+\begin{document}
+\maketitle
+\pagebreak
+
+\begin{homeworkProblem}
+
+\begin{lstlisting}
+(25pts) Suppose  we  are  compiling  for  a  machine  with  1-byte  characters,
+2-byte  shorts,  4-byte  integers,  and  8-byte  reals,  and  with  alignment
+rules  that  require  the  address  of  every primitive data element to be an
+even multiple of the element’s size. Suppose further that the compiler  is
+not  permitted  to  reorder  fields.  How  much  space  will  be  consumed  by
+the following array? Explain.
+
+  A : array [0..9] of record
+                            s : short
+                            c : char
+                            t : short
+                            d : char
+                            r : real
+                            i : integer
+\end{lstlisting}
+
+  \textbf{Solution}
+  \\ \\
+  A total of space consumed will be 240 bytes. \\
+  s has an offset of 0.\\
+  c has an offset of 2 \\
+  t holds an offset of 4, compelled by 1 (means of allignment)\\
+  d holds an offset of 6 \\
+  r holds an offset of 8 \\
+  added up, we get 20 bytes - not a multiple of 8 so each array element is padded to 24 bytes\\
+  when adding, "i," which holds an offset of 16, \\
+  The array has 10 elements, 24 times 10 is equal to 240 bytes\\
+
+
+
+\end{homeworkProblem}
+\pagebreak
+
+\begin{homeworkProblem}
+
+\begin{lstlisting}
+(25pts) For  the  following  code  specify  which  of  the  variables  a,b,c,d
+are  type  equivalent under (a) structural equivalence, (b) strict name
+equivalence, and (c) loose name equivalence.
+
+Type  T = array [1..10] of integer
+      S = T
+a: T
+b: T
+c: S
+d: array [1..10] of integer
+\end{lstlisting}
+
+  \textbf{Solution}\\
+  (a) All have structural equivalence\\
+  (b) Variables a and b have strict name equivalence\\
+  (c) Variables a, b, and c have loose name equivalence\\
+
+\end{homeworkProblem}
+\pagebreak
+
+\begin{homeworkProblem}
+\begin{lstlisting}
+(25pts) We are trying to run the following C program:
+
+typedef struct
+{
+  int a;
+  char *b;
+} Cell;
+
+void AllocateCell(Cell* q)
+{
+  q= (Cell*) malloc ( sizeof(Cell) );
+}
+
+void main ()
+{
+  Cell* c;
+  AllocateCell(c);
+  c->a= 1;free(c);
+}
+
+The program produces a run-time error. Why? Rewrite the functions AllocateCell
+and mainso that the program runs correctly.
+
+\end{lstlisting}
+
+  \textbf{Solution}
+    \begin{lstlisting}
+    typedef struct
+    {
+      int a ;
+      char * b ;
+    } Cell ;
+
+    void AllocateCell ( Cell ** q )
+    {
+      * q = ( Cell *) malloc ( sizeof ( Cell ));
+    }
+    void main ()
+    {
+      Cell * c ;
+      AllocateCell (& c ); // if you pass c then it is passed by value ,
+                          // we use &c because we want to pass by reference
+      c - > a =1;
+      free ( c );
+    }
+    \end{lstlisting}
+\end{homeworkProblem}
+\pagebreak
+
+\begin{homeworkProblem}
+\begin{lstlisting}
+(25 pts) Consider the following C declaration, compiled on a 32-bit Pentium
+machine (with array elements aligned at addresses multiple of 4 bytes).
+
+struct
+{
+  int n;
+  char c;
+} A[10][10];
+
+If  the  address  of A[0][0]is  1000  (decimal),  what  is  the  address
+of A[3][7]?Explainhow this is computed.
+
+\end{lstlisting}
+
+  \textbf{Solution}\\
+  \begin{lstlisting}
+  struct
+  {
+  int n ;
+  char c ;
+  } A [10] [10]; // row , colomn total size of 10
+  
+  The address of A[3][7] is 1296 So the size of the structure is 8. The base a
+  ddress of A[0][0] is 1000. Now we do the computations:
+  (1000) + (3 ∗ 10 ∗ 8) + (7 ∗ 8) = 1296
+
+  COMPUTATION:
+  (base address) + (element row 3 * total size of rows * size of struct) +
+  (element column 7 * size of struct)
+  \end{lstlisting}
+\end{homeworkProblem}
+\pagebreak
+
+\begin{homeworkProblem}
+\begin{lstlisting}
+
+(Extra Credit -10 pts) Write a small fragment of code that shows how unions
+can be used in C to interpret the bits of a value of one type as if they
+represented a value of some other type (non-converting type cast).
+
+\end{lstlisting}
+
+  \textbf{Solution}\\
+  \begin{lstlisting}
+
+union ch_ascii
+{
+    char ch ;
+    unsigned int asc_val ;
+} union_tag ; // union variable
+
+void main ()
+{
+    union_tag . ch = ’C’;
+    union_tag . asc_val = (int )( union_var . ch ); // non converting type
+                                                    //cast occuring here
+    // output of program C and 67
+    printf ("%c␣%d", union_tag . ch , union_tag . asc_val );
+    return 0;
+}
+\end{lstlisting}
+
+
+\end{homeworkProblem}
+\pagebreak
+
+\end{document}

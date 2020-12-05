@@ -1,0 +1,260 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usepackage[plain]{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+
+\usetikzlibrary{automata,positioning}
+
+%
+% Basic Document Settings
+%
+
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1}
+
+\pagestyle{fancy}
+\lhead{\hmwkAuthorName}
+%\chead{\hmwkClass\ (\hmwkClassInstructor\ \hmwkClassTime): \hmwkTitle}
+\rhead{\firstxmark}
+\lfoot{\lastxmark}
+\cfoot{\thepage}
+
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+\setlength\parindent{0pt}
+
+%
+% Create Problem Sections
+%
+
+\newcommand{\enterProblemHeader}[1]{
+    \nobreak\extramarks{}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+}
+
+\newcommand{\exitProblemHeader}[1]{
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \stepcounter{#1}
+    \nobreak\extramarks{Problem \arabic{#1}}{}\nobreak{}
+}
+
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\newcounter{homeworkProblemCounter}
+\setcounter{homeworkProblemCounter}{1}
+\nobreak\extramarks{Problem \arabic{homeworkProblemCounter}}{}\nobreak{}
+
+%
+% Homework Problem Environment
+%
+% This environment takes an optional argument. When given, it will adjust the
+% problem counter. This is useful for when the problems given for your
+% assignment aren't sequential. See the last 3 problems of this template for an
+% example.
+%
+\newenvironment{homeworkProblem}[1][-1]{
+    \ifnum#1>0
+        \setcounter{homeworkProblemCounter}{#1}
+    \fi
+    \section{Problem \arabic{homeworkProblemCounter}}
+    \setcounter{partCounter}{1}
+    \enterProblemHeader{homeworkProblemCounter}
+}{
+    \exitProblemHeader{homeworkProblemCounter}
+}
+
+%
+% Homework Details
+%   - Title
+%   - Due date
+%   - Class
+%   - Section/Time
+%   - Instructor
+%   - Author
+%
+
+\newcommand{\hmwkTitle}{Homework\ \#4}
+\newcommand{\hmwkDueDate}{March 12, 2019}
+\newcommand{\hmwkClass}{Programming Languages}
+\newcommand{\hmwkClassTime}{Section 101}
+\newcommand{\hmwkClassInstructor}{Erin Keith}
+\newcommand{\hmwkAuthorName}{\textbf{Michael DesRoches}}
+
+%
+% Title Page
+%
+
+\title{
+    \vspace{2in}
+    \textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
+    \normalsize\vspace{0.1in}\small{Due\ on\ \hmwkDueDate\ at 9:00am}\\
+    \vspace{0.1in}\large{\textit{\hmwkClassInstructor\ \hmwkClassTime}}
+    \vspace{3in}
+}
+
+\author{\hmwkAuthorName}
+\date{}
+
+\renewcommand{\part}[1]{\textbf{\large Part \Alph{partCounter}}\stepcounter{partCounter}\\}
+
+
+\begin{document}
+\maketitle
+\pagebreak
+
+\begin{homeworkProblem}
+
+\begin{lstlisting}
+(24pts) Translate the following expression into (a)postfix and (b)prefix
+notation:
+
+  (b + sqrt(b x b - 4 x a x c))/(2 x a)
+\end{lstlisting}
+
+  \textbf{Solution}
+  \\ \\
+  a)
+    \begin{multline*}
+      (b*sqrt(bb* 4ac* -) +)(2a*) / \\
+    \end{multline*}
+  b)
+    \begin{multline*}
+      /(+ b sqrt(- *bb **4ac))(*2a) \\
+    \end{multline*}
+\end{homeworkProblem}
+
+\begin{homeworkProblem}
+
+\begin{lstlisting}
+(26pts) Some languages (e.g., Algol 68) do not employ short-circuit evaluation
+for Boolean expressions. However, in such languages an if ... then ... else
+construct (which only evaluates the  arm  that  is  needed) can  be  used  as
+an  expression  that  returns  a  value.  Show  how  to  use if...then...elseto
+achieve the effect of short-circuit evaluation for A and Band for A or B.
+\end{lstlisting}
+
+  \textbf{Solution}\\
+  For A and B, short- circuit evaluation can look like:\\
+
+  //return FALSE
+  A(FALSE) ANDTH B(FALSE)
+
+  //return FALSE
+  A(FALSE) ANDTH B(TRUE)
+
+  //return FALSE
+  A(TRUE) ANDTH B(FALSE)
+
+  //return TRUE
+  A(TRUE) ANDTH B(TRUE)\\
+
+  For A or B, short circuit evaluation can look like:\\
+
+  //return FALSE
+  A(FALSE) OREL B(FALSE)
+
+  //return TRUE
+  A(FALSE) OREL B(TRUE)
+
+  //return TRUE
+  A(TRUE) OREL B(FALSE)
+
+  //return TRUE
+  A(TRUE) OREL B(TRUE)
+\end{homeworkProblem}
+\pagebreak
+
+\begin{homeworkProblem}
+\begin{lstlisting}
+(24pts) Consider a midtest loop, here written in C, that processes all lines in
+the input until a blank line is found:
+
+for (;;)
+{
+  line = read_line();
+  if (all_blanks(line)) break;
+  process_line(line);
+}
+
+Show  how  you  might  accomplish  the  same  task in  C using  a (a)
+whileand(b) doloop,  if breakinstructionswere not available.
+\end{lstlisting}
+
+  \textbf{Solution}
+    \begin{lstlisting}
+      while loop:
+
+      line = read_line();
+
+      while(!all_blank(line)){
+        process_line(line);
+        line = readline();
+      }
+
+      do loop:
+
+      do{
+        line = read_line();
+
+        if(!all_blanks(line))
+        process_line(line);
+      }
+
+      while(!all_blanks(line));
+    \end{lstlisting}
+\end{homeworkProblem}
+\pagebreak
+
+\begin{homeworkProblem}
+\begin{lstlisting}
+(26pts)Write  a tail-recursivefunction  in  Scheme  to  compute nfactorial
+(n! = 1x2x...xn). You will probably want to define a helper function, as
+discussed in the textbook.
+
+\end{lstlisting}
+
+  \textbf{Solution}\\
+  Hepler functions make our programs easier to read\\
+
+  (define (hepler x function)\\
+  (if 0 ? x)\\
+  function\\
+  (helper(-n1)(* function x))))\\
+  \\
+  (define factorial x)\\
+  (hepler x1)
+\\
+\end{homeworkProblem}
+
+\begin{homeworkProblem}
+\begin{lstlisting}
+(Extra  Credit -10pts) Give  an  example  in  C  in  which  an  in-line
+subroutine  may  be significantly faster than a functionally equivalent macro.
+Give another example in which the macro  is likely  to  be  faster.  Hint:
+think  about  applicative  versus  normal-order  evaluation  of arguments.
+\end{lstlisting}
+
+  \textbf{Solution}\\
+\#define someFunction(someExpression)\{int x = something * 5 + something - something\} \\
+\\
+inline int someFunction(someExpression)\{something * 3 + something - something\}
+
+\end{homeworkProblem}
+\pagebreak
+
+\end{document}

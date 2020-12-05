@@ -1,0 +1,315 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usepackage[plain]{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+
+\usetikzlibrary{automata,positioning}
+
+%
+% Basic Document Settings
+%
+
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1}
+
+\pagestyle{fancy}
+\lhead{\hmwkAuthorName}
+%\chead{\hmwkClass\ (\hmwkClassInstructor\ \hmwkClassTime): \hmwkTitle}
+\rhead{\firstxmark}
+\lfoot{\lastxmark}
+\cfoot{\thepage}
+
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+\setlength\parindent{0pt}
+
+%
+% Create Problem Sections
+%
+
+\newcommand{\enterProblemHeader}[1]{
+    \nobreak\extramarks{}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+}
+
+\newcommand{\exitProblemHeader}[1]{
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \stepcounter{#1}
+    \nobreak\extramarks{Problem \arabic{#1}}{}\nobreak{}
+}
+
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\newcounter{homeworkProblemCounter}
+\setcounter{homeworkProblemCounter}{1}
+\nobreak\extramarks{Problem \arabic{homeworkProblemCounter}}{}\nobreak{}
+
+%
+% Homework Problem Environment
+%
+% This environment takes an optional argument. When given, it will adjust the
+% problem counter. This is useful for when the problems given for your
+% assignment aren't sequential. See the last 3 problems of this template for an
+% example.
+%
+\newenvironment{homeworkProblem}[1][-1]{
+    \ifnum#1>0
+        \setcounter{homeworkProblemCounter}{#1}
+    \fi
+    \section{Problem \arabic{homeworkProblemCounter}}
+    \setcounter{partCounter}{1}
+    \enterProblemHeader{homeworkProblemCounter}
+}{
+    \exitProblemHeader{homeworkProblemCounter}
+}
+
+%
+% Homework Details
+%   - Title
+%   - Due date
+%   - Class
+%   - Section/Time
+%   - Instructor
+%   - Author
+%
+
+\newcommand{\hmwkTitle}{Homework\ \#6}
+\newcommand{\hmwkDueDate}{April 25, 2019}
+\newcommand{\hmwkClass}{Programming Languages}
+\newcommand{\hmwkClassTime}{Section 101}
+\newcommand{\hmwkClassInstructor}{Erin Keith}
+\newcommand{\hmwkAuthorName}{\textbf{Michael DesRoches}}
+
+%
+% Title Page
+%
+
+\title{
+    \vspace{2in}
+    \textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
+    \normalsize\vspace{0.1in}\small{Due\ on\ \hmwkDueDate\ at 9:00am}\\
+    \vspace{0.1in}\large{\textit{\hmwkClassInstructor\ \hmwkClassTime}}
+    \vspace{3in}
+}
+
+\author{\hmwkAuthorName}
+\date{}
+
+\renewcommand{\part}[1]{\textbf{\large Part \Alph{partCounter}}\stepcounter{partCounter}\\}
+
+
+\begin{document}
+\maketitle
+\pagebreak
+
+\begin{homeworkProblem}
+
+\begin{lstlisting}
+(24pts) Consider the following C program:
+  void foo()
+  {
+    int i;
+    printf("%d ", i++);
+  }
+  void main()
+  {
+    int j;
+    for (j = 1;
+    j <= 10; j++)
+    foo();
+  }
+
+Local variable i in subroutine foo is never initialized. On many systems,
+however, variable i appears to “remember” its value between the calls to
+foo, and the program will print 0 1 2 3 4 5 6 7 8 9.
+  (a)(12pts) Suggest an explanation for this behavior.
+  (b)(12pts) Change the code above (without  modifying
+     function foo) to alter this behavior.
+
+\end{lstlisting}
+
+  \textbf{Solution}
+  \\ \\
+(a) The local variable, i, is never initialized. Therefore, the value isn't really\\
+known. This will cause undefined behavior depending on the compiler. We can't\\
+know the outcome and the outcome may be different on different machines.\\
+
+\begin{lstlisting}
+(b)
+static void overWriteMemoryLocation(void)
+{
+    int j = 10;
+}
+void foo()
+{
+    int i;
+    printf("%d ", i++);
+}
+int main()
+{
+    int j;
+    for (j = 1;
+    j <= 10; j++)
+    foo();
+}
+\end{lstlisting}
+\\
+Calling another function before foo() overwrites the memory location that foo()\\
+will use for i.
+\end{homeworkProblem}
+\pagebreak
+
+\begin{homeworkProblem}
+
+\begin{lstlisting}
+(20pts) Can you write a macro in C that “returns” the factorial of aninteger
+argument(without calling a subroutine)? Why or why not?
+\end{lstlisting}
+
+  \textbf{Solution}\\
+No, you can't have macro in C w/out calling a soubroutine. Macro is a \\
+preprocessor before the code is compiled. Preprocessors include the headers \\
+and text replace the macros with their definition. So, any recursive definition\\
+of a macro will be replaced only once and not until the base condition is met. \\
+
+\end{homeworkProblem}
+
+\begin{homeworkProblem}
+\begin{lstlisting}
+(24pts) Consider a subroutine swap that takes two parameters and simply swaps
+their values.For example, after calling swap(X,Y), X should have the original
+value of Y and Y the original value of X. Assume that variables to be swapped
+can be simple or subscripted (elements  of  an  array), and they have the same
+type (integer). Show that it is impossible to write such a general-purpose
+swap subroutine in a language with:
+
+  (a)(12pts) parameter passing by value.
+  (b)(12pts) parameter passing by name.
+
+Hint: for the case of passing by name, consider mutually dependent parameters.
+
+\end{lstlisting}
+
+  \textbf{Solution}
+    \begin{lstlisting}
+A subroutine is termed as an executable code resided with in the block or in a
+function. Consider the sub routine for the swap program in the language:
+
+(a) Parameter passing by value:
+
+    procedure swap(x, y: int):
+              var t : int
+                   t:=x;
+                   x:=y;
+                   y:=t;
+    end;
+
+    Main:
+         Declare i,j;
+         Call swap(i,j)
+
+By calling the parameters through pass by values, none of the actual
+arguments can be changed, so the variables retain the values they are
+initialized with.
+
+Flow for the function call by its value:
+
+    temp:=i
+    i:=j
+    j=temp
+
+In this scenario the subroutine will not reflect the function. Hence it
+shows is impossible to write the code for the elements of the array.
+
+(b) Parameter passing by name:
+
+    procedure swap(x, y: int):
+              var t : int
+                   t:=x;
+                   x:=y;
+                   y:=t;
+    end;
+
+    Main:
+         Declare i,a[];
+         Call swap(i,a)
+
+By calling the subroutine by passed by name conflicts are taken care of
+between actual parameters and the local variables of the function.
+
+Flow for the function call by its name:
+
+    temp:=i
+    i:=a
+    a=temp
+
+Call by name can’t handle the swap properly by calling its name.
+    \end{lstlisting}
+\end{homeworkProblem}
+\pagebreak
+
+\begin{homeworkProblem}
+\begin{lstlisting}
+(32pts) Consider the following program, written in no particular language. Show
+what the program prints in the  case of parameter passing by (a) value,
+(b) reference, (c) value-result, and (d) name. Justify your answer. When
+analyzing the case of passing by value-result, you may have noticed that there
+are two potentiallyambiguousissues–what are they?
+
+procedure f (x, y, z)
+  x := x + 1
+  y := z
+  z := z + 1
+
+// main
+  i := 1;
+  a[1] := 10;
+  a[2] := 11
+  f (i, a[i], i);
+  print (i);
+  print (a[1]);
+  print (a[2]);
+
+\end{lstlisting}
+
+  \textbf{Solution}\\
+(a) 1, 10, 11\\
+(b) 3, 2, 11\\
+(c) 3, 11, 3 \\
+(d) When initially called, i = 1, a[i] = 10. Then the first stetement changes\\
+i to 2. Then a[2] is changed to 2, value is set to z which is also the same as\\
+x. Then i is changed to 3. Print = 3, 10, 2. Result = 3, 2, 3
+\end{homeworkProblem}
+
+\begin{homeworkProblem}
+\begin{lstlisting}
+(Extra Credit -10 pts) Does a program run faster when the programmer does not
+specify values for the optional parameters in a subroutine call?
+
+\end{lstlisting}
+
+  \textbf{Solution}\\
+Performance gain is minimal because the subroutine call but the answer is yes\\
+because it takes time to to evaluate the parameters that are being called with\\
+the function. \\
+
+
+\end{homeworkProblem}
+\pagebreak
+
+\end{document}
